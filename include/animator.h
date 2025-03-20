@@ -19,6 +19,9 @@ typedef struct Animation
     float duration_left;
 
     enum animationType type;
+
+    int frame_width;
+    int frame_height;
 } Animation;
 
 void criaAnimation(Animation* animacoes);
@@ -26,7 +29,7 @@ void criaAnimation(Animation* animacoes);
 
 void animationupdate(Animation* self, bool* canupdt,  enum animStates* anst);
 void animationupdateatk(Animation* self, bool* canupdt, enum animStates* anst, Vector2* pos);
-Rectangle animation_frame(Animation* self, int frames_p_row, int width, int height);
-Rectangle animation_frame_cammy_jump(Animation* self, int frames_p_row, int width, int height);
+Rectangle animation_frame(Animation* self);
+//Rectangle animation_frame_cammy_jump(Animation* self, int frames_p_row, int width, int height);
 
 #endif

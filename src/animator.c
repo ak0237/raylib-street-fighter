@@ -12,9 +12,9 @@ enum animationType stringParaEnum(const char *str) {
 }
 
 void criaAnimation(Animation* animacoes){
-    int first, last, cur, stp;
+    int first, last, cur, stp, wid, hei;
     float durationl, anspeed;
-    char antype [20];
+    char antype [20], annome[20];
 
     int i = 0;
 
@@ -22,12 +22,12 @@ void criaAnimation(Animation* animacoes){
     animdados = fopen("dat.txt", "r");
 
     for (i = 0; i < ANIMSTATESFINAL; i++){
-        fscanf(animdados, "%d %d %d %f %f %d %s", &first, &last, &cur, &durationl, &anspeed, &stp, antype);
-        animacoes[i] = (Animation){.first = first, .last = last, .cur = cur, .duration_left = durationl, .speed = anspeed, .step = stp, .type = stringParaEnum(antype)};
+        fscanf(animdados, "%s %d %d %d %f %f %d %s %d %d", annome, &first, &last, &cur, &durationl, &anspeed, &stp, antype, &wid, &hei);
+        animacoes[i] = (Animation){.first = first, .last = last, .cur = cur, .duration_left = durationl, .speed = anspeed, .step = stp, .type = stringParaEnum(antype), .frame_width=wid, .frame_height=hei};
     }
 
 
-    printf("%d\n", sizeof(enum animStates));
+    //printf("%d\n", sizeof(enum animStates));
 
     fclose(animdados);
 }
@@ -81,9 +81,9 @@ void animationupdate(Animation* self, bool* canupdt, enum animStates* anst){
     }
 }
 
-Rectangle animation_frame(Animation* self, int frames_p_row, int width, int height){
-    int x = (self->cur%frames_p_row) * width;
-    int y = (self->cur/frames_p_row) * height;
+Rectangle animation_frame(Animation* self){
+    int x = (self->cur%(self->last + 1)) * self->frame_width;
+    int y = (self->cur/(self->last + 1)) * self->frame_height;
 
-    return (Rectangle) {.x = x, .y = y, .width=width, .height=height};
+    return (Rectangle) {.x = x, .y = y, .width=self->frame_width, .height=self->frame_height};
 }

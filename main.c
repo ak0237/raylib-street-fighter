@@ -118,27 +118,27 @@ int main(void)
         case WALKING:
             colRec = (Rectangle){pos.x, pos.y,  wWALKINGs, hWALKINGs};
             colRec2 = (Rectangle){pos.x - 17, pos.y - hWALKINGs,  22, 81};
-            DrawTexturePro(cammywlk, animation_frame(&cammyanimations[WALKING], fWALKING, wWALKINGs, hWALKINGs), colRec, (Vector2){wWALKINGs/2 ,hWALKINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammywlk, animation_frame(&cammyanimations[WALKING]), colRec, (Vector2){wWALKINGs/2 ,hWALKINGs}, 0.0f, WHITE);
             DrawRectangleLinesEx(colRec2, 2.0, BLACK);
             break;
         case WALKINGB:
             colRec2 = (Rectangle){pos.x - 17, pos.y - hWALKINGs,  22, 81};
-            DrawTexturePro(cammywlk, animation_frame(&cammyanimations[WALKINGB], fWALKINGB, wWALKINGs, hWALKINGs), (Rectangle){pos.x, pos.y,  wWALKINGs, hWALKINGs}, (Vector2){wWALKINGs/2 ,hWALKINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammywlk, animation_frame(&cammyanimations[WALKINGB]), (Rectangle){pos.x, pos.y,  wWALKINGs, hWALKINGs}, (Vector2){wWALKINGs/2 ,hWALKINGs}, 0.0f, WHITE);
             DrawRectangleLinesEx(colRec2, 2.0, BLACK);
             break;
         case PUNCHING1:
-            DrawTexturePro(cammypun1, animation_frame(&cammyanimations[PUNCHING1], fPUNCHING1, wPUNCHINGs, hPUNCHINGs), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammypun1, animation_frame(&cammyanimations[PUNCHING1]), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
             //DrawRectangleGradientEx(atkRec, RED, BLUE, GREEN, PURPLE);
             break;
         case PUNCHING2:
-            DrawTexturePro(cammypun2, animation_frame(&cammyanimations[PUNCHING2], fPUNCHING2, wPUNCHINGs, hPUNCHINGs), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammypun2, animation_frame(&cammyanimations[PUNCHING2]), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
             break;
         case PUNCHING3:
-            DrawTexturePro(cammypun3, animation_frame(&cammyanimations[PUNCHING3], fPUNCHING3, wPUNCHINGs, hPUNCHINGs), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammypun3, animation_frame(&cammyanimations[PUNCHING3]), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
             break;
         case IDLE:
             colRec2 = (Rectangle){pos.x - 17, pos.y - hWALKINGs,  22, 81};
-            DrawTexturePro(cammyidl, animation_frame(&cammyanimations[IDLE], fIDLE, wIDLE, hIDLE), (Rectangle){pos.x, pos.y, wIDLE, hIDLE}, (Vector2){wIDLE/2 ,hIDLE}, 0.0f, WHITE);
+            DrawTexturePro(cammyidl, animation_frame(&cammyanimations[IDLE]), (Rectangle){pos.x, pos.y, cammyanimations[IDLE].frame_width, cammyanimations[IDLE].frame_height}, (Vector2){cammyanimations[IDLE].frame_width/2 ,cammyanimations[IDLE].frame_height}, 0.0f, WHITE);
             DrawRectangleLinesEx(colRec2, 2.0, BLACK);
             break;
         default:
