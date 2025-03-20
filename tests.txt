@@ -1,0 +1,123 @@
+void populacor(Color* cor, int max, int* cordados){
+    int i, j;
+
+    for(i = 0; i < max; i++){
+        cor[i].a = 255;
+        for(j=0; j < 3; j++){
+            cor[i].r = cordados[0];
+            switch (j)
+            {
+            case 0:
+                cor[i].r = cordados[(j%3) + (int)j/3];
+                break;
+            case 1:
+                cor[i].g = cordados[(j%3) + (int)j/3];
+                break;
+            case 2:
+                cor[i].b = cordados[(j%3) + (int)j/3];
+            default:
+                break;
+            }
+        }
+    }
+}
+
+
+Color* verdes = calloc(4, sizeof(Color));
+    
+    verdes[0].r = 57;
+    verdes[0].g = 89;
+    verdes[0].b = 24;
+    verdes[0].a = 255;
+
+    verdes[1].r = 82;
+    verdes[1].g = 113;
+    verdes[1].b = 49;
+    verdes[1].a = 255;
+
+    verdes[2].r = 115;
+    verdes[2].g = 162;
+    verdes[2].b = 82;
+    verdes[2].a = 255;
+
+    verdes[3].r = 156;
+    verdes[3].g = 203;
+    verdes[3].b = 132;
+    verdes[3].a = 255;
+
+    Color* rosas = calloc(4, sizeof(Color));
+    
+    rosas[0].r = 165;
+    rosas[0].g = 24;
+    rosas[0].b = 99;
+    rosas[0].a = 255;
+
+    rosas[1].r = 181;
+    rosas[1].g = 65;
+    rosas[1].b = 23;
+    rosas[1].a = 255;
+
+    rosas[2].r = 222;
+    rosas[2].g = 121;
+    rosas[2].b = 156;
+    rosas[2].a = 255;
+
+    rosas[3].r = 247;
+    rosas[3].g = 162;
+    rosas[3].b = 198;
+    rosas[3].a = 255;
+
+    for(k = 0; k < 4; k++){
+        ImageColorReplace(&sprtidlcammy, verdes[k], rosas[k]);
+        Color c = corr[k];
+        Color b = cor[k];
+        printf("Corr %d -> R:%d G:%d B:%d A:%d\nCor -> R:%d G:%d B:%d A:%d\n------------------\n", k, c.r, c.g, c.b, c.a, b.r, b.g, b.b, b.a);
+
+    }
+
+
+
+    ============================================================SEGURANÇA=========================
+    /** 
+    Animation ancammyidl = {.first=first, .last = last, .cur = cur, .duration_left=durationl, .speed=anspeed, .step = stp, .type = REPEATING};
+    Animation ancammywlk = {.first=0, .last = fWALKING-1, .cur = 0, .duration_left=0.1, .speed=0.1, .step = 1, .type = REPEATING};
+    Animation ancammywlkb = {.first=0, .last= fWALKINGB-1, .cur = 5, .duration_left=0.1, .speed=0.1, .step = -1, .type = REPEATING};
+    Animation ancammypun1 = {.first=0, .last = fPUNCHING1-1, .cur = 0, .duration_left=0.1, .speed=0.1, .step = 1, .type = ONESHOT};
+    Animation ancammypun2 = {.first=0, .last = fPUNCHING2-1, .cur = 0, .duration_left=0.1, .speed=0.1, .step = 1, .type = ONESHOT};
+    Animation ancammypun3 = {.first=0, .last = fPUNCHING3-1, .cur = 0, .duration_left=0.1, .speed=0.08, .step = 1, .type = ONESHOT};
+    //Animation ancammyjmp = {.first=0, .last = 4, .cur = 0, .duration_left=0.1, .speed=0.1, .step = 1, .type = REPEATING}; */
+
+    //Animation* curAnimation = calloc(5, sizeof(Animation));
+
+
+    ------------------------------------------------------------------
+
+    /*switch (animState)
+        {
+            case WALKING:
+                animationupdate(&cammyanimations[WALKING], &can_update_animation, &animState);
+            break;
+            case WALKINGB:
+                animationupdate(&cammyanimations[WALKINGB], &can_update_animation, &animState);
+                break;
+            case PUNCHING1:
+                animationupdate(&cammyanimations[PUNCHING1], &can_update_animation, &animState);
+                if(cammyanimations[PUNCHING1].cur == 1)
+                    atkRec = (Rectangle){.x = pos.x+12, .y = pos.y -71, .width=20, .height= 7};
+                else
+                    atkRec = (Rectangle){.x = -900, .y = pos.y -71, .width=20, .height= 7};
+                break;
+            case PUNCHING2:
+                animationupdate(&cammyanimations[PUNCHING2], &can_update_animation, &animState);
+                break;
+            case PUNCHING3:
+                animationupdate(&cammyanimations[PUNCHING3], &can_update_animation, &animState);
+                break;
+            case IDLE:
+                animationupdate(&cammyanimations[IDLE], &can_update_animation, &animState);
+                break;
+            default:
+                //DrawTexturePro(cammyidl, animation_frame(&ancammyidl, 5, 47, 84), (Rectangle){pos.x, pos.y, 47, 84}, (Vector2){0,0}, 0.0f, WHITE);
+                break;
+        }*/
+     =================================================================================
