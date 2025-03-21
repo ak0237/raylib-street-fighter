@@ -46,16 +46,13 @@ void handle_init_loads(personagens* personagem){
         fscanf(animdados, "%s %d %d %d %f %f %d %s %d %d %d %d", annome, &first, &last, &cur, &durationl, &anspeed, &stp, antype, &wid, &hei, &px, &py);
         personagem->animations[i] = (Animation){.first = first, .last = last, .cur = cur, .duration_left = durationl, .speed = anspeed, .step = stp, .type = stringParaEnum(antype), .frame_width=wid, .frame_height=hei, .px=px, .py=py};
         printf("wid = %d\n animation wid = %d\n", wid, personagem->animations[i].frame_width);
-        switch (i)
-        {
-        case WALKINGB:
-            grupo_de_sprites_rec[WALKINGB] = (Rectangle){0,0,0,0};
-            break;
         
-        default:
-            grupo_de_sprites_rec[i] = (Rectangle){.x = px, .y = py, .width = wid*(last+1), .height=hei};
-            break;
-        }
+            
+        
+        
+        grupo_de_sprites_rec[i] = (Rectangle){.x = px, .y = py, .width = wid*(last+1), .height=hei};
+            
+        
         grupo_de_sprites_img[i] = ImageFromImage(sprtcammy, grupo_de_sprites_rec[i]);
         personagem->textures[i] = LoadTextureFromImage(grupo_de_sprites_img[i]);
         
