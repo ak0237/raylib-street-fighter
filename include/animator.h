@@ -41,4 +41,7 @@ void animationupdateatk(Animation* self, bool* canupdt, enum animStates* anst, V
 Rectangle animation_frame(Animation* self);
 //Rectangle animation_frame_cammy_jump(Animation* self, int frames_p_row, int width, int height);
 
+void drawAnychar(personagens* self, enum animStates animState, Vector2 pos);
+
+
 #endif

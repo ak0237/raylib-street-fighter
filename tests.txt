@@ -185,3 +185,8 @@ Color* verdes = calloc(4, sizeof(Color));
         }*/
         //DrawTexture(cammywlk, 10, 10, WHITE);
      ========================================
+     =============enums=============
+     enum frmsprw {fIDLE = 5, fWALKING = 6, fWALKINGB = 6, fJUMPING, fPUNCHING1 = 3, fPUNCHING2 = 3, fPUNCHING3 = 5};
+enum frmswds {wIDLE = 47, wWALKINGs = 47, wPUNCHINGs = 77};
+enum frmshts {hIDLE = 84, hWALKINGs = 87, hPUNCHINGs = 90};
+==========================================

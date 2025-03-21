@@ -5,10 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-enum frmsprw {fIDLE = 5, fWALKING = 6, fWALKINGB = 6, fJUMPING, fPUNCHING1 = 3, fPUNCHING2 = 3, fPUNCHING3 = 5};
-enum frmswds {wIDLE = 47, wWALKINGs = 47, wPUNCHINGs = 77};
-enum frmshts {hIDLE = 84, hWALKINGs = 87, hPUNCHINGs = 90};
-
 int main(void)
 {
    
@@ -18,13 +14,12 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     SetTargetFPS(60);   
 
-
     Texture2D ota = LoadTexture("assets/personagens/ota.png");
 
 
     personagens cammy;
-    cammy.animations = calloc(ANIMSTATESFINAL - 1, sizeof(Animation));
-    cammy.textures = calloc(ANIMSTATESFINAL-1, sizeof(Texture2D));
+    cammy.animations = malloc((ANIMSTATESFINAL) * sizeof(Animation));
+    cammy.textures = malloc((ANIMSTATESFINAL) * sizeof(Texture2D));
     
 
     handle_init_loads(&cammy);
@@ -41,13 +36,14 @@ int main(void)
     camera.zoom = 4.0f;
 
     enum animStates animState;
-    Rectangle atkRec, enemy = {120, 150, 47, 84}, colRec, colRec2;
+    Rectangle enemy = {120, 150, 47, 84};
 
     int vida = 100 * 30;
     
     printf("%d\n", vida);
 
     bool can_update_animation = true;
+    animState = IDLE;
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -57,8 +53,6 @@ int main(void)
     
         animationupdate(&cammy.animations[animState], &can_update_animation, &animState);
         
-        if(CheckCollisionRecs(colRec2, enemy) && dir.x == 1)
-            dir.x = 0;
 
         pos.x += dir.x * speed * dt;
         pos.y += dir.y * speed * dt;
@@ -67,10 +61,7 @@ int main(void)
 
         dir = (Vector2){.x=0, .y=0};
 
-        if (CheckCollisionRecs(atkRec, enemy)){
-            vida -= 5;
-            printf("%d\n", vida);
-        }
+       
        
         BeginDrawing();
         ClearBackground(SKYBLUE);
@@ -81,10 +72,10 @@ int main(void)
 
         DrawTexturePro(ota, (Rectangle){0,0,-47,84}, enemy, (Vector2){0,0}, 0.0f, WHITE);
 
-        DrawTexturePro(cammy.textures[animState], animation_frame(&cammy.animations[animState]), (Rectangle){pos.x, pos.y, cammy.animations[animState].frame_width, cammy.animations[animState].frame_height}, (Vector2){cammy.animations[animState].frame_width / 2, cammy.animations[animState].frame_height}, 0.0f, WHITE);
+        //DrawTexturePro(cammy.textures[animState], animation_frame(&cammy.animations[animState]), (Rectangle){pos.x, pos.y, cammy.animations[animState].frame_width, cammy.animations[animState].frame_height}, (Vector2){cammy.animations[animState].frame_width / 2, cammy.animations[animState].frame_height}, 0.0f, WHITE);
 
-        
-        
+        drawAnychar(&cammy, animState, pos);
+
         DrawCircle(pos.x, pos.y, 10.0, WHITE);
 
         EndMode2D();
@@ -94,9 +85,16 @@ int main(void)
         EndDrawing();
    
     }
+    for (int i = 0; i < ANIMSTATESFINAL; i++) {
+        UnloadTexture(cammy.textures[i]);
+    }
+    UnloadTexture(ota);
     free(cammy.animations);
     free(cammy.textures);
+    //int a;
+    //scanf("%d", &a);
     CloseWindow();       
+
 
     return 0;
 }
