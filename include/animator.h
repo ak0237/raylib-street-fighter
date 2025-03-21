@@ -31,6 +31,7 @@ typedef struct personagens
 {
     Animation* animations;
     Texture2D* textures;
+    int type;
 } personagens;
 
 void handle_init_loads(personagens* personagem);
@@ -38,7 +39,7 @@ void handle_init_loads(personagens* personagem);
 
 void animationupdate(Animation* self, bool* canupdt,  enum animStates* anst);
 void animationupdateatk(Animation* self, bool* canupdt, enum animStates* anst, Vector2* pos);
-Rectangle animation_frame(Animation* self);
+Rectangle animation_frame(Animation* self, int type);
 //Rectangle animation_frame_cammy_jump(Animation* self, int frames_p_row, int width, int height);
 
 void drawAnychar(personagens* self, enum animStates animState, Vector2 pos);

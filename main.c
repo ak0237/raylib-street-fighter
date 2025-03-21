@@ -16,8 +16,18 @@ int main(void)
     //=============================================
     //==================== LOADS INICIAIS DO GAME============================
     
-    Texture2D ota = LoadTexture("assets/personagens/ota.png"); // Carrega o sprite ca dammy rosa | usando apenas para testes
+    //Texture2D ota = LoadTexture("assets/personagens/ota.png"); // Carrega o sprite ca dammy rosa | usando apenas para testes
+    personagens enemy;
+    enemy.type=0;
+    enemy.animations = malloc((ANIMSTATESFINAL) * sizeof(Animation)); // Seta o ponteiro animations de cammy para um array dinamico de Animation (struct que contem os dados de posição, largura, frames, etc de cada animação) | ANIMSTATESFINAL é o último item de um enum que contem todas as animações, logo é alocado memória o suficiente para todas as animações
+    enemy.textures = malloc((ANIMSTATESFINAL) * sizeof(Texture2D));
+    handle_init_loads(&enemy);
+
+
+
+
     personagens cammy; // Cria uma personagem chamada cammy
+    cammy.type = 1;
     cammy.animations = malloc((ANIMSTATESFINAL) * sizeof(Animation)); // Seta o ponteiro animations de cammy para um array dinamico de Animation (struct que contem os dados de posição, largura, frames, etc de cada animação) | ANIMSTATESFINAL é o último item de um enum que contem todas as animações, logo é alocado memória o suficiente para todas as animações
     cammy.textures = malloc((ANIMSTATESFINAL) * sizeof(Texture2D)); // Seta o ponteiro textures de cammy para um array dinâmico de Textures2D 
     handle_init_loads(&cammy); // Função handle_init_loads() recebe o endereço do personagem, e popula seus ponteiros animations e textures com dados pré definidos
@@ -30,12 +40,16 @@ int main(void)
     
     //======================================================================
     //==========================VARIÁVEIS INICIAIS DO INIMIGO===============
-    Rectangle enemy = {120, 150, 47, 84}; // Retangulo com a posição de onde o inimigo será spawnado
+    //Rectangle enemy = {120, 150, 47, 84}; // Retangulo com a posição de onde o inimigo será spawnado
     //======================================================================
     //=========================VARIÁVEIS DO JOGO=======================    
     enum animStates animState;  // Cria uma variável enum animStates chamada animState | animStates é um enum que contém todas as animações
     bool can_update_animation = true; // Bolleano usado para permitir que as animações ocorram | animações do tipo ONESHOT (pulo, soco, chute, etc) são executadas apenas uma vez quando o botão correspondente é pressionado, e não podem ser interrompidas, logo esse bolleano se torna falso quando esse tipo de animação começa a ser executado, e verdadeiro quando a animação acaba
     animState = IDLE; // Define o animState antes de começar o jogo como IDLE, logo o personagem começara estando em animação de idle
+
+    enum animStates enemyAnimState = IDLE;
+    bool can_enemy_update_animation = true;
+
     
     //========================================================================
     //==================COFIGURAÇÃO DA CAMERA=============================
@@ -53,6 +67,7 @@ int main(void)
 
 
         //====================================UPDATES=============================================
+        animationupdate(&enemy.animations[enemyAnimState], &can_enemy_update_animation, &enemyAnimState);
         animationupdate(&cammy.animations[animState], &can_update_animation, &animState); // Seta onde os dados da animação de acordo com o animState
         
         pos.x += dir.x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
@@ -69,12 +84,13 @@ int main(void)
 
         BeginMode2D(camera); // Inicia a camera 2d
 
-        DrawTexturePro(ota, (Rectangle){0,0,-47,84}, enemy, (Vector2){0,0}, 0.0f, WHITE); // Renderiza o inimigo
+        //DrawTexturePro(ota, (Rectangle){0,0,-47,84}, enemy, (Vector2){0,0}, 0.0f, WHITE); // Renderiza o inimigo
 
 
+        drawAnychar(&enemy, enemyAnimState, (Vector2){0,0});
         drawAnychar(&cammy, animState, pos); // Renderiza a animação do player
 
-        DrawCircle(pos.x, pos.y, 10.0, WHITE); // Desenha um circulo na origem do player | Debug
+        //DrawCircle(pos.x, pos.y, 10.0, WHITE); // Desenha um circulo na origem do player | Debug
 
         EndMode2D(); // Enderra a camera 
 
@@ -84,10 +100,13 @@ int main(void)
     //=======================================LIBERANDO A MEMÓRIA =============================================
     for (int i = 0; i < ANIMSTATESFINAL; i++) { // Descarrega as texturas do player
         UnloadTexture(cammy.textures[i]);
+        UnloadTexture(enemy.textures[i]);
     }
-    UnloadTexture(ota); // Descarrega a textura do inimigo
+    //UnloadTexture(ota); // Descarrega a textura do inimigo
     free(cammy.animations); // Libera o espaço alocado para os dados das animações
     free(cammy.textures); // Libera o espaço alocado para as texturas 
+    free(enemy.animations);
+    free(enemy.textures);
 
     CloseWindow(); // Fecha a janela
 

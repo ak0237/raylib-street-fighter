@@ -39,11 +39,10 @@ void handle_init_loads(personagens* personagem){
     for (i = 0; i < ANIMSTATESFINAL; i++){
        
         //printf("%d\n", i);
-            
-        
-        
+       
         //printf("%d\n", i);
         fscanf(animdados, "%s %d %d %d %f %f %d %s %d %d %d %d", annome, &first, &last, &cur, &durationl, &anspeed, &stp, antype, &wid, &hei, &px, &py);
+        
         personagem->animations[i] = (Animation){.first = first, .last = last, .cur = cur, .duration_left = durationl, .speed = anspeed, .step = stp, .type = stringParaEnum(antype), .frame_width=wid, .frame_height=hei, .px=px, .py=py};
         //printf("wid = %d\n animation wid = %d\n", wid, personagem->animations[i].frame_width);
         
@@ -70,7 +69,8 @@ void handle_init_loads(personagens* personagem){
 }
 
 void drawAnychar(personagens* self, enum animStates animState, Vector2 pos){
-    DrawTexturePro(self->textures[animState], animation_frame(&self->animations[animState]), (Rectangle){pos.x, pos.y, self->animations[animState].frame_width, self->animations[animState].frame_height}, (Vector2){self->animations[animState].frame_width / 2, self->animations[animState].frame_height}, 0.0f, WHITE);
+    
+    DrawTexturePro(self->textures[animState], animation_frame(&self->animations[animState], self->type), (Rectangle){pos.x, pos.y, self->animations[animState].frame_width, self->animations[animState].frame_height}, (Vector2){self->animations[animState].frame_width / 2, self->animations[animState].frame_height}, 0.0f, WHITE);
     //printf("desenhando \n");
 }
 
@@ -121,11 +121,15 @@ void animationupdate(Animation* self, bool* canupdt, enum animStates* anst){
     }
 }
 
-Rectangle animation_frame(Animation* self){
-    int x = (self->cur%(self->last + 1)) * self->frame_width;
+Rectangle animation_frame(Animation* self, int type){
+    int nWid = self->frame_width;
+    if(type == 0){
+        nWid = nWid * (-1);
+    }
+    int x = (self->cur%(self->last + 1)) *  self->frame_width;
     int y = (self->cur/(self->last + 1)) * self->frame_height;
 
-    return (Rectangle) {.x = x, .y = y, .width=self->frame_width, .height=self->frame_height};
+    return (Rectangle) {.x = x, .y = y, .width=nWid, .height=self->frame_height};
 }
 
 
