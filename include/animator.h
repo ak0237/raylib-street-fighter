@@ -22,9 +22,18 @@ typedef struct Animation
 
     int frame_width;
     int frame_height;
+
+    int px;
+    int py;
 } Animation;
 
-void criaAnimation(Animation* animacoes);
+typedef struct personagens
+{
+    Animation* animations;
+    Texture2D* textures;
+} personagens;
+
+void handle_init_loads(personagens* personagem);
 
 
 void animationupdate(Animation* self, bool* canupdt,  enum animStates* anst);

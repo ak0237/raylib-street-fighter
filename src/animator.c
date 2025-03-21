@@ -1,6 +1,7 @@
 //** me inspirei no código: https://github.com/vimichael/raylib-animations*/
 
 #include "../include/animator.h"
+#include "../include/raylib.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,25 +12,61 @@ enum animationType stringParaEnum(const char *str) {
     return REPEATING;
 }
 
-void criaAnimation(Animation* animacoes){
-    int first, last, cur, stp, wid, hei;
+void handle_init_loads(personagens* personagem){
+    // variáveis do file
+    int first, last, cur, stp, wid, hei, px, py;
     float durationl, anspeed;
     char antype [20], annome[20];
-
+    //--------------------------------
     int i = 0;
-
-    FILE* animdados;
-    animdados = fopen("dat.txt", "r");
-
+    Rectangle* grupo_de_sprites_rec;
+    Image* grupo_de_sprites_img;
+    FILE* animdados= fopen("dat.txt", "r");
+    
+    //-------------------------------
+    Image sprtcammy = LoadImage("assets/personagens/image.png");
+    if(sprtcammy.data == NULL)
+        printf("nimg");
+    else   
+        printf("foi\n");
+    grupo_de_sprites_rec = calloc(ANIMSTATESFINAL-1, sizeof(Rectangle));
+    grupo_de_sprites_img = calloc(ANIMSTATESFINAL-1, sizeof(Image));
+    //animdados = fopen("../dat.txt", "r");
+    if(animdados != NULL)
+        printf("abriu\n");
+    else
+        printf("n abr\n");
     for (i = 0; i < ANIMSTATESFINAL; i++){
-        fscanf(animdados, "%s %d %d %d %f %f %d %s %d %d", annome, &first, &last, &cur, &durationl, &anspeed, &stp, antype, &wid, &hei);
-        animacoes[i] = (Animation){.first = first, .last = last, .cur = cur, .duration_left = durationl, .speed = anspeed, .step = stp, .type = stringParaEnum(antype), .frame_width=wid, .frame_height=hei};
+       
+        printf("%d\n", i);
+            
+        
+        
+        printf("%d\n", i);
+        fscanf(animdados, "%s %d %d %d %f %f %d %s %d %d %d %d", annome, &first, &last, &cur, &durationl, &anspeed, &stp, antype, &wid, &hei, &px, &py);
+        personagem->animations[i] = (Animation){.first = first, .last = last, .cur = cur, .duration_left = durationl, .speed = anspeed, .step = stp, .type = stringParaEnum(antype), .frame_width=wid, .frame_height=hei, .px=px, .py=py};
+        printf("wid = %d\n animation wid = %d\n", wid, personagem->animations[i].frame_width);
+        switch (i)
+        {
+        case WALKINGB:
+            grupo_de_sprites_rec[WALKINGB] = (Rectangle){0,0,0,0};
+            break;
+        
+        default:
+            grupo_de_sprites_rec[i] = (Rectangle){.x = px, .y = py, .width = wid*(last+1), .height=hei};
+            break;
+        }
+        grupo_de_sprites_img[i] = ImageFromImage(sprtcammy, grupo_de_sprites_rec[i]);
+        personagem->textures[i] = LoadTextureFromImage(grupo_de_sprites_img[i]);
+        
     }
-
-
+    
     //printf("%d\n", sizeof(enum animStates));
 
     fclose(animdados);
+    UnloadImage(sprtcammy);
+    free(grupo_de_sprites_img);
+    free(grupo_de_sprites_rec);
 }
 
 

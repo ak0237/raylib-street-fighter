@@ -12,6 +12,9 @@ enum frmshts {hIDLE = 84, hWALKINGs = 87, hPUNCHINGs = 90};
 
 
 
+
+
+
 int main(void)
 {
    
@@ -21,7 +24,7 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     SetTargetFPS(60);   
 
-    Image sprtcammy = LoadImage("assets/personagens/image.png");
+   /* Image sprtcammy = LoadImage("assets/personagens/image.png");
 
 
     Rectangle idlsprtcammy = {.x = 0, .y = 0, .width=wIDLE*fIDLE, .height=hIDLE};
@@ -38,22 +41,25 @@ int main(void)
     Image sprtpun3cammy= ImageFromImage(sprtcammy, pun3sprtcammy);
     //Image sprtjmpcammy = ImageFromImage(sprtcammy, jmpsprtcammy);
 
-    //
+    */
 
     
 
     Texture2D ota = LoadTexture("assets/personagens/ota.png");
-
+/*
     Texture2D cammyidl = LoadTextureFromImage(sprtidlcammy);
     Texture2D cammywlk = LoadTextureFromImage(sprtwlkcammy);
     Texture2D cammypun1= LoadTextureFromImage(sprtpun1cammy);
     Texture2D cammypun2= LoadTextureFromImage(sprtpun2cammy);
     Texture2D cammypun3= LoadTextureFromImage(sprtpun3cammy);
-   // Texture2D cammyjmp = LoadTextureFromImage(sprtjmpcammy);
+   // Texture2D cammyjmp = LoadTextureFromImage(sprtjmpcammy);*/
 
-   Animation* cammyanimations = calloc(ANIMSTATESFINAL - 1, sizeof(Animation));
+    personagens cammy;
+    cammy.animations = calloc(ANIMSTATESFINAL - 1, sizeof(Animation));
+    cammy.textures = calloc(ANIMSTATESFINAL-1, sizeof(Texture2D));
+    
 
-    criaAnimation(cammyanimations);
+    handle_init_loads(&cammy);
 
     float speed = 100.0f;
 
@@ -81,7 +87,7 @@ int main(void)
 
         handleInput(&dir, can_update_animation, &animState);
     
-        animationupdate(&cammyanimations[animState], &can_update_animation, &animState);
+        animationupdate(&cammy.animations[animState], &can_update_animation, &animState);
         
         if(CheckCollisionRecs(colRec2, enemy) && dir.x == 1)
             dir.x = 0;
@@ -118,34 +124,34 @@ int main(void)
         case WALKING:
             colRec = (Rectangle){pos.x, pos.y,  wWALKINGs, hWALKINGs};
             colRec2 = (Rectangle){pos.x - 17, pos.y - hWALKINGs,  22, 81};
-            DrawTexturePro(cammywlk, animation_frame(&cammyanimations[WALKING]), colRec, (Vector2){wWALKINGs/2 ,hWALKINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammy.textures[WALKING], animation_frame(&cammy.animations[WALKING]), colRec, (Vector2){wWALKINGs/2 ,hWALKINGs}, 0.0f, WHITE);
             DrawRectangleLinesEx(colRec2, 2.0, BLACK);
             break;
         case WALKINGB:
             colRec2 = (Rectangle){pos.x - 17, pos.y - hWALKINGs,  22, 81};
-            DrawTexturePro(cammywlk, animation_frame(&cammyanimations[WALKINGB]), (Rectangle){pos.x, pos.y,  wWALKINGs, hWALKINGs}, (Vector2){wWALKINGs/2 ,hWALKINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammy.textures[WALKING], animation_frame(&cammy.animations[WALKINGB]), (Rectangle){pos.x, pos.y,  wWALKINGs, hWALKINGs}, (Vector2){wWALKINGs/2 ,hWALKINGs}, 0.0f, WHITE);
             DrawRectangleLinesEx(colRec2, 2.0, BLACK);
             break;
         case PUNCHING1:
-            DrawTexturePro(cammypun1, animation_frame(&cammyanimations[PUNCHING1]), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammy.textures[PUNCHING1], animation_frame(&cammy.animations[PUNCHING1]), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
             //DrawRectangleGradientEx(atkRec, RED, BLUE, GREEN, PURPLE);
             break;
         case PUNCHING2:
-            DrawTexturePro(cammypun2, animation_frame(&cammyanimations[PUNCHING2]), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammy.textures[PUNCHING2], animation_frame(&cammy.animations[PUNCHING2]), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
             break;
         case PUNCHING3:
-            DrawTexturePro(cammypun3, animation_frame(&cammyanimations[PUNCHING3]), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
+            DrawTexturePro(cammy.textures[PUNCHING3], animation_frame(&cammy.animations[PUNCHING3]), (Rectangle){pos.x, pos.y, wPUNCHINGs, hPUNCHINGs}, (Vector2){wPUNCHINGs/2 ,hPUNCHINGs}, 0.0f, WHITE);
             break;
         case IDLE:
             colRec2 = (Rectangle){pos.x - 17, pos.y - hWALKINGs,  22, 81};
-            DrawTexturePro(cammyidl, animation_frame(&cammyanimations[IDLE]), (Rectangle){pos.x, pos.y, cammyanimations[IDLE].frame_width, cammyanimations[IDLE].frame_height}, (Vector2){cammyanimations[IDLE].frame_width/2 ,cammyanimations[IDLE].frame_height}, 0.0f, WHITE);
+            DrawTexturePro(cammy.textures[IDLE], animation_frame(&cammy.animations[IDLE]), (Rectangle){pos.x, pos.y, cammy.animations[IDLE].frame_width, cammy.animations[IDLE].frame_height}, (Vector2){cammy.animations[IDLE].frame_width/2 ,cammy.animations[IDLE].frame_height}, 0.0f, WHITE);
             DrawRectangleLinesEx(colRec2, 2.0, BLACK);
             break;
         default:
             //DrawTexturePro(cammyidl, animation_frame(&ancammyidl, 5, 47, 84), (Rectangle){pos.x, pos.y, 47, 84}, (Vector2){0,0}, 0.0f, WHITE);
             break;
         }
-        DrawTexture(cammywlk, 10, 10, WHITE);
+        //DrawTexture(cammywlk, 10, 10, WHITE);
         
         
         DrawCircle(pos.x, pos.y, 10.0, WHITE);
@@ -157,7 +163,8 @@ int main(void)
         EndDrawing();
    
     }
-    free(cammyanimations);
+    free(cammy.animations);
+    free(cammy.textures);
     CloseWindow();       
 
     return 0;
