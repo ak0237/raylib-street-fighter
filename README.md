@@ -13,5 +13,5 @@
 3. Execute o programa:
 
     ```bash
-    .\\run.ps1
+    .\run.ps1
     ```
