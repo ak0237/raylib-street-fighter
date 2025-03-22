@@ -3,3 +3,4 @@ tests/
 *.exe
 ptb.c
 tmptest.c
+.vscode/

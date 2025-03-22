@@ -6,6 +6,6 @@
 #include <stdio.h>
 
 
-void handleInput(Vector2* dir, bool can_update_animation, enum animStates* animState);
+void handleInput(Vector2* dir, bool can_update_animation, enum animStates* animState, int type);
 
 #endif

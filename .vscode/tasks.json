@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Compilar e Rodar Raylib",
+        "type": "shell",
+        "command": "gcc",
+        "args": [
+          "main.c",
+          "src/animator.c",
+          "src/handleInput.c",
+          "-o",
+          "game.exe",
+          "-O1",
+          "-Wall",
+          "-std=c99",
+          "-Wno-missing-braces",
+          "-I", "include/",
+          "-L", "lib/",
+          "-lraylib",
+          "-lopengl32",
+          "-lgdi32",
+          "-lwinmm",
+          "-lm"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": [],
+        "detail": "Compila com Raylib e gera game.exe",
+        "dependsOn": ["Run Executable"]
+      },
+      {
+        "label": "Run Executable",
+        "type": "shell",
+        "command": "game.exe",
+        "problemMatcher": []
+      }
+    ]
+  }

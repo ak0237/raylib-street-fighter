@@ -8,8 +8,8 @@
 int main(void)
 {
    // Configurações iniciais
-    const int screenWidth = 800; // Largura da tela
-    const int screenHeight = 450; // Altura da Tela
+    const int screenWidth = 960; // Largura da tela
+    const int screenHeight = 561; // Altura da Tela
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window"); // Cria a janela onde o game será rodado
     SetTargetFPS(60);   // Seta fps
 
@@ -32,11 +32,19 @@ int main(void)
     cammy.textures = malloc((ANIMSTATESFINAL) * sizeof(Texture2D)); // Seta o ponteiro textures de cammy para um array dinâmico de Textures2D 
     handle_init_loads(&cammy); // Função handle_init_loads() recebe o endereço do personagem, e popula seus ponteiros animations e textures com dados pré definidos
 
+
+
+
+    personagens entidades [] = {cammy, enemy};
+
     //===================================================================
     //===========================VARIÁVEIS INICIAIS DO PLAYER==================
     float speed = 100.0f; // Velocidade com que o player ira se mover
     Vector2 pos = {.x = 10, .y=10}; // Vetor que contem a posição do player
     Vector2 dir = {.x=0, .y=0}; // Vertor que contem a direção do player
+
+    Vector2 epos = {10,10};
+    Vector2 edir = {0,0};
     
     //======================================================================
     //==========================VARIÁVEIS INICIAIS DO INIMIGO===============
@@ -57,14 +65,14 @@ int main(void)
     camera.target = (Vector2){ pos.x + 20.0f, pos.y + 20.0f }; // Seta o target da camera para a posição do player, com um deslocamento de 20.0 para centralizar melhot
     camera.offset = (Vector2){ screenWidth/2.0f, screenHeight/2.0f };
     camera.rotation = 0.0f; // Seta rotação da camera pa 0
-    camera.zoom = 4.0f; // Seta zoom para 4
+    camera.zoom = 3.0f; // Seta zoom para 3
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         float dt = GetFrameTime(); // deltaTime 
 
-        handleInput(&dir, can_update_animation, &animState); // Função que verifica se um input foi feito | Dependendo do input pode alterar a direção do player e/ou sua animação
-
+        handleInput(&dir, can_update_animation, &animState, cammy.type); // Função que verifica se um input foi feito | Dependendo do input pode alterar a direção do player e/ou sua animação
+        handleInput(&edir, can_enemy_update_animation, &enemyAnimState, enemy.type);
 
         //====================================UPDATES=============================================
         animationupdate(&enemy.animations[enemyAnimState], &can_enemy_update_animation, &enemyAnimState);
@@ -73,9 +81,13 @@ int main(void)
         pos.x += dir.x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
         pos.y += dir.y * speed * dt; // Altera a posição em x de acordo com a direção do player 
 
+        epos.x += edir.x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
+        epos.y += edir.y * speed * dt; // Altera a posição em x de acordo com a direção do player
+
         camera.target = (Vector2){ pos.x + 20, pos.y - 40 }; // Altera a posição da camera de acordo com a posição do player
 
         dir = (Vector2){.x=0, .y=0}; // Reseta a direção para (0,0) | player parado
+        edir = dir;
 
        
        //=============================RENDERIZAÇÃO===================
@@ -87,7 +99,7 @@ int main(void)
         //DrawTexturePro(ota, (Rectangle){0,0,-47,84}, enemy, (Vector2){0,0}, 0.0f, WHITE); // Renderiza o inimigo
 
 
-        drawAnychar(&enemy, enemyAnimState, (Vector2){0,0});
+        drawAnychar(&enemy, enemyAnimState, epos);
         drawAnychar(&cammy, animState, pos); // Renderiza a animação do player
 
         //DrawCircle(pos.x, pos.y, 10.0, WHITE); // Desenha um circulo na origem do player | Debug
