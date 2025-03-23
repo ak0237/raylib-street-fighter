@@ -68,66 +68,71 @@ void handle_init_loads(personagens* personagem){
     free(grupo_de_sprites_rec);
 }
 
-void drawAnychar(personagens* self, enum animStates animState, Vector2 pos){
+void drawAnychar(personagens* self, enum animStates* animState, Vector2* pos, int type){
     
-    DrawTexturePro(self->textures[animState], animation_frame(&self->animations[animState], self->type), (Rectangle){pos.x, pos.y, self->animations[animState].frame_width, self->animations[animState].frame_height}, (Vector2){self->animations[animState].frame_width / 2, self->animations[animState].frame_height}, 0.0f, WHITE);
-    //printf("desenhando \n");
+    DrawTexturePro(self->textures[*animState], animation_frame(&self->animations[*animState], type), (Rectangle){pos->x, pos->y, self->animations[*animState].frame_width, self->animations[*animState].frame_height}, (Vector2){self->animations[*animState].frame_width / 2, self->animations[*animState].frame_height}, 0.0f, WHITE);
+    //printf("desenhando %d\n", animState);
 }
 
-void animationupdate(Animation* self, bool* canupdt, enum animStates* anst){
+void animationupdate(personagens* self, bool* canupdt,  enum animStates* anst){
     float dt = GetFrameTime();
+    for(int i = PLAYER1; i <= PLAYER2; i++){
+        //if(i == PLAYER1) printf("%d\n", self[i].animations->cur);
+        self[i].animations[anst[i]].duration_left -= dt;
 
-    self->duration_left -= dt;
+        if(self[i].animations[anst[i]].type == ONESHOT)
+            canupdt[i] = false;
 
-    if(self->type == ONESHOT)
-        *canupdt = false;
+        if(self[i].animations[anst[i]].duration_left <= 0.0){
+            self[i].animations[anst[i]].duration_left = self[i].animations[anst[i]].speed;
+            self[i].animations[anst[i]].cur += self[i].animations[anst[i]].step;
 
-    if(self->duration_left <= 0.0){
-        self->duration_left = self->speed;
-        self->cur += self->step;
+            if(self[i].animations[anst[i]].cur > self[i].animations[anst[i]].last){
 
-        if(self->cur > self->last){
-
-            switch (self->type)
-            {
-            case REPEATING:
-                self->cur = self->first;
-                break;
-            case ONESHOT:
-                *anst = IDLE;
-                *canupdt = true;
-                self->cur = self->first;
-                break;
-            default:
-                break;
+                switch (self[i].animations[anst[i]].type)
+                {
+                case REPEATING:
+                    self[i].animations[anst[i]].cur = self[i].animations[anst[i]].first;
+                    break;
+                case ONESHOT:
+                    self[i].animations[anst[i]].cur = self[i].animations[anst[i]].first;
+                    canupdt[i] = true;
+                    anst[i] = IDLE;
+                    break;
+                default:
+                    break;
+                }
+                
+            } else if(self[i].animations[anst[i]].cur < self[i].animations[anst[i]].first){
+                switch (self[i].animations[anst[i]].type)
+                {
+                case REPEATING:
+                    self[i].animations[anst[i]].cur = self[i].animations[anst[i]].last;
+                    break;
+                case ONESHOT:
+                    self[i].animations[anst[i]].cur = self[i].animations[anst[i]].last;
+                    canupdt[i] = true;
+                    anst[i] = IDLE;
+                    break;
+                default:
+                    break;
+                }
+                
             }
-            
-        } else if(self->cur < self->first){
-            switch (self->type)
-            {
-            case REPEATING:
-                self->cur = self->last;
-                break;
-            case ONESHOT:
-                *anst = IDLE;
-                *canupdt = true;
-                self->cur = self->last;
-                break;
-            default:
-                break;
-            }
-            
         }
     }
 }
 
 Rectangle animation_frame(Animation* self, int type){
     int nWid = self->frame_width;
-    if(type == 0){
+    if(type == PLAYER2){
         nWid = nWid * (-1);
+        //printf("Pointer recebido: %p\n", (void*)self);
+        //printf("cur recebido: %d\n", self->cur);
     }
     int x = (self->cur%(self->last + 1)) *  self->frame_width;
     int y = (self->cur/(self->last + 1)) * self->frame_height;
+
 
     return (Rectangle) {.x = x, .y = y, .width=nWid, .height=self->frame_height};
 }

@@ -40,23 +40,29 @@ int main(void)
     //===================================================================
     //===========================VARIÁVEIS INICIAIS DO PLAYER==================
     float speed = 100.0f; // Velocidade com que o player ira se mover
-    Vector2 pos = {.x = 10, .y=10}; // Vetor que contem a posição do player
+    Vector2 pos = {.x = 100, .y=100}; // Vetor que contem a posição do player
     Vector2 dir = {.x=0, .y=0}; // Vertor que contem a direção do player
 
-    Vector2 epos = {10,10};
+    Vector2 epos = {150,100};
     Vector2 edir = {0,0};
+
+    Vector2 positions [] = {pos, epos};
+    Vector2 directions [] = {dir, edir};
     
     //======================================================================
     //==========================VARIÁVEIS INICIAIS DO INIMIGO===============
     //Rectangle enemy = {120, 150, 47, 84}; // Retangulo com a posição de onde o inimigo será spawnado
     //======================================================================
     //=========================VARIÁVEIS DO JOGO=======================    
-    enum animStates animState;  // Cria uma variável enum animStates chamada animState | animStates é um enum que contém todas as animações
+    enum animStates cammyanimState;  // Cria uma variável enum animStates chamada animState | animStates é um enum que contém todas as animações
     bool can_update_animation = true; // Bolleano usado para permitir que as animações ocorram | animações do tipo ONESHOT (pulo, soco, chute, etc) são executadas apenas uma vez quando o botão correspondente é pressionado, e não podem ser interrompidas, logo esse bolleano se torna falso quando esse tipo de animação começa a ser executado, e verdadeiro quando a animação acaba
-    animState = IDLE; // Define o animState antes de começar o jogo como IDLE, logo o personagem começara estando em animação de idle
+    cammyanimState = IDLE; // Define o animState antes de começar o jogo como IDLE, logo o personagem começara estando em animação de idle
 
     enum animStates enemyAnimState = IDLE;
     bool can_enemy_update_animation = true;
+
+    bool can_updates[] ={can_update_animation, can_enemy_update_animation};
+    enum animStates animState [] = {cammyanimState, enemyAnimState};
 
     
     //========================================================================
@@ -67,29 +73,39 @@ int main(void)
     camera.rotation = 0.0f; // Seta rotação da camera pa 0
     camera.zoom = 3.0f; // Seta zoom para 3
 
+    Texture2D bg = LoadTexture("assets/personagens/bg.jpg");
+
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         float dt = GetFrameTime(); // deltaTime 
 
-        handleInput(&dir, can_update_animation, &animState, cammy.type); // Função que verifica se um input foi feito | Dependendo do input pode alterar a direção do player e/ou sua animação
-        handleInput(&edir, can_enemy_update_animation, &enemyAnimState, enemy.type);
+        handleInput(directions, can_updates, animState); // Função que verifica se um input foi feito | Dependendo do input pode alterar a direção do player e/ou sua animação
+        //handleInput(&edir, can_enemy_update_animation, &enemyAnimState, enemy.type);
 
         //====================================UPDATES=============================================
-        animationupdate(&enemy.animations[enemyAnimState], &can_enemy_update_animation, &enemyAnimState);
-        animationupdate(&cammy.animations[animState], &can_update_animation, &animState); // Seta onde os dados da animação de acordo com o animState
-        
-        pos.x += dir.x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
-        pos.y += dir.y * speed * dt; // Altera a posição em x de acordo com a direção do player 
+        animationupdate(entidades, can_updates, animState);
+        //animationupdate(&cammy.animations[cammyanimState], &can_update_animation, &animState); // Seta onde os dados da animação de acordo com o animState
 
-        epos.x += edir.x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
-        epos.y += edir.y * speed * dt; // Altera a posição em x de acordo com a direção do player
+        //printf("%d\n", animState[PLAYER1]);
+        
+        pos.x += directions[PLAYER1].x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
+        pos.y += directions[PLAYER1].y * speed * dt; // Altera a posição em x de acordo com a direção do player 
+
+        epos.x += directions[PLAYER2].x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
+        epos.y += directions[PLAYER2].y * speed * dt; // Altera a posição em x de acordo com a direção do player
+
+        positions[PLAYER1] = pos;
+        positions[PLAYER2] = epos;
 
         camera.target = (Vector2){ pos.x + 20, pos.y - 40 }; // Altera a posição da camera de acordo com a posição do player
+
+        directions[PLAYER1] = (Vector2){0,0};
+        directions[PLAYER2] = directions[PLAYER1];
 
         dir = (Vector2){.x=0, .y=0}; // Reseta a direção para (0,0) | player parado
         edir = dir;
 
-       
+        //printf("%d\n", entidades[PLAYER1].animations->cur);
        //=============================RENDERIZAÇÃO===================
         BeginDrawing(); // Inicia o ambiente de Drawing
         ClearBackground(SKYBLUE); // Apaga a tudo que está desenhado, e seta a cor do background para azul
@@ -98,9 +114,11 @@ int main(void)
 
         //DrawTexturePro(ota, (Rectangle){0,0,-47,84}, enemy, (Vector2){0,0}, 0.0f, WHITE); // Renderiza o inimigo
 
+        DrawTexture(bg,0,0,WHITE);
 
-        drawAnychar(&enemy, enemyAnimState, epos);
-        drawAnychar(&cammy, animState, pos); // Renderiza a animação do player
+        //printf("%d\n", animState[PLAYER2]);
+        drawAnychar(&entidades[PLAYER2], &animState[PLAYER2], &positions[PLAYER2], PLAYER2);
+        drawAnychar(&entidades[PLAYER1], &animState[PLAYER1], &positions[PLAYER1], PLAYER1); // Renderiza a animação do player
 
         //DrawCircle(pos.x, pos.y, 10.0, WHITE); // Desenha um circulo na origem do player | Debug
 
@@ -114,6 +132,7 @@ int main(void)
         UnloadTexture(cammy.textures[i]);
         UnloadTexture(enemy.textures[i]);
     }
+    UnloadTexture(bg);
     //UnloadTexture(ota); // Descarrega a textura do inimigo
     free(cammy.animations); // Libera o espaço alocado para os dados das animações
     free(cammy.textures); // Libera o espaço alocado para as texturas 
@@ -122,6 +141,8 @@ int main(void)
 
     CloseWindow(); // Fecha a janela
 
+    int a;
+    scanf("%d", &a);
 
     return 0;
 }
