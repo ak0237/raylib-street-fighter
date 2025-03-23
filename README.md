@@ -13,11 +13,11 @@ Bem-vindo ao repositório do meu clone de Street Fighter! O projeto está sendo 
 - 🕹️ **Personagem secundário** com:
   - Idle (Parado)
   - Walking (Andando)
+  - 3 tipos de soco (com comandos responsivos via teclado)
 
 ---
 
 ## 🔨 O que ainda vou adicionar
-- Animações de **soco** para o secundário
 - Animações de **chute** para ambos os personagens.
 - Animações de **hit** (quando o personagem é atingido) para ambos.
 - Animações de **vitória** após o fim do combate.
