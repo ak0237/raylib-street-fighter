@@ -84,6 +84,8 @@ int main(void)
 
     Texture2D bg = LoadTexture("assets/personagens/bg.png");
 
+    int firstDraw, secondDraw;
+
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         float dt = GetFrameTime(); // deltaTime 
@@ -135,6 +137,7 @@ int main(void)
             if(entidades[i].position.y > 220.0f){ 
                 entidades[i].position.y = 220.0f;
                 entidades[i].velocity.y = 0;
+                entidades[i].grounded = true;\
             }
             entidades[i].direction.x = 0;
 
@@ -164,17 +167,26 @@ int main(void)
         DrawTexture(bg,0,0,WHITE);
 
         //printf("%d\n", animState[PLAYER2]);
+
+        
+
+        if(entidades[PLAYER1].layer >= entidades[PLAYER2].layer){
+            firstDraw = PLAYER2;
+            secondDraw = PLAYER1;
+        }else{
+            firstDraw = PLAYER1;
+            secondDraw = PLAYER2;
+        }
           
-        drawAnychar(&entidades[PLAYER2], &animState[PLAYER2]);
+        drawAnychar(&entidades[firstDraw], &animState[firstDraw]);
+        drawAnychar(&entidades[secondDraw], &animState[secondDraw]); // Renderiza a animação do player
 
-        drawAnychar(&entidades[PLAYER1], &animState[PLAYER1]); // Renderiza a animação do player
-
-        DrawRectangleLinesEx(entidades[PLAYER1].pushbox, 2.0f, RED);
-        printf("x = %f | y = %f | w = %f | h = %f \n", entidades[PLAYER1].pushbox.x, entidades[PLAYER1].pushbox.y, entidades[PLAYER1].pushbox.width, entidades[PLAYER1].pushbox.height);
+        //DrawRectangleLinesEx(entidades[PLAYER1].pushbox, 2.0f, RED);
+        //printf("x = %f | y = %f | w = %f | h = %f \n", entidades[PLAYER1].pushbox.x, entidades[PLAYER1].pushbox.y, entidades[PLAYER1].pushbox.width, entidades[PLAYER1].pushbox.height);
 
         //DrawRectangleRec(entidades[PLAYER1].pushbox, GREEN);
 
-        DrawCircle(entidades[PLAYER1].position.x, entidades[PLAYER1].position.y, 10.0, WHITE); // Desenha um circulo na origem do player | Debug
+        //DrawCircle(entidades[PLAYER1].position.x, entidades[PLAYER1].position.y, 10.0, WHITE); // Desenha um circulo na origem do player | Debug
 
         EndMode2D(); // Enderra a camera 
 

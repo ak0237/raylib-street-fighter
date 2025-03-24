@@ -57,6 +57,7 @@ typedef struct personagens
     Rectangle hutbox;
     Rectangle throwbox;
     int facing;
+    bool grounded;
 } personagens;
 
 

@@ -9,22 +9,26 @@ void chstates(personagens* personagem, int state, int substate){
 void move(personagens* personagem, int direction, int state, int substate){
     personagem->direction.x = direction;
     chstates(personagem, state, substate);
-
+    //personagem->layer = 1;
 }
 
 void attack(personagens* personagem, int state, int substate){
     chstates(personagem, state, substate);
+    //personagem->layer=2;
 }
 
 void onJumping(personagens* personagem){
     //printf("%d\n", personagem->animations->cur);
-    personagem->direction.y = 1;
+   // personagem->direction.y = 1;
    
 }
 
 void jump(personagens* personagem, int state, int substate){
-    chstates(personagem, JUMP, JUMPING);
-    personagem->velocity.y += -450;
+    if(personagem->grounded){
+        chstates(personagem, JUMP, JUMPING);
+        personagem->velocity.y += -550;
+        personagem->grounded = false;
+    }
     //else personagem->direction.y = -1; 
 }
 
@@ -160,17 +164,21 @@ void handleInput( bool* can_update_animation, enum animStates* animState, person
         {
         case IDLE:
             inputIdle(personagem, i);
+            personagem[i].layer = 0;
             break;
         case WALK:
             inputWalk(personagem, i);
+            personagem[i].layer = 1;
             break;
         case JUMP:
             onJumping(&personagem[i]);
+            personagem[i].layer = 2;
             break;
         case CROUNCH:
             break;
         case ATTACK:
             inputAttack(personagem, i);
+            personagem[i].layer = 3;
             break;
         default:
             break;
