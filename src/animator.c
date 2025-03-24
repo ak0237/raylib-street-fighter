@@ -68,9 +68,52 @@ void handle_init_loads(personagens* personagem){
     free(grupo_de_sprites_rec);
 }
 
+void nhandle_init_loads(personagens* personagem, enum animStates* animState){
+
+        personagem->texture = LoadTexture("assets/personagens/old/image - Copia (2).png");
+
+        int ii = 0;
+    
+        personagem->retangulos[ii] =(Rectangle){5 , 31, 47, 82}; 
+        ii++;
+        personagem->retangulos[ii] =(Rectangle){59, 30, 47, 83};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle){111, 29, 47, 84};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle){164, 30, 47, 83};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle){217, 31, 47, 82};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {271, 26, 44, 87};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {322, 31, 41, 82};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {372, 29, 41, 84};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {420, 26, 45, 87};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {474, 31, 42, 82};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {524, 29, 41, 84};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {572, 39, 47, 74};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {670, 12, 35, 101};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {711, 25, 29, 70};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {745, 33, 33, 48};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {786, 18, 31, 78};
+        ii++;
+        personagem->retangulos[ii] =(Rectangle) {826, 9, 35, 104};
+
+    
+}
+
 void drawAnychar(personagens* self, enum animStates* animState, Vector2* pos, int type){
     
-    DrawTexturePro(self->textures[*animState], animation_frame(&self->animations[*animState], type), (Rectangle){pos->x, pos->y, self->animations[*animState].frame_width, self->animations[*animState].frame_height}, (Vector2){self->animations[*animState].frame_width / 2, self->animations[*animState].frame_height}, 0.0f, WHITE);
+    DrawTexturePro(self->textures[self->animationSubState], animation_frame(&self->animations[self->animationSubState], type), (Rectangle){self->position.x, self->position.y, self->animations[self->animationSubState].frame_width, self->animations[self->animationSubState].frame_height}, (Vector2){self->animations[self->animationSubState].frame_width / 2, self->animations[self->animationSubState].frame_height}, 0.0f, WHITE);
     //printf("desenhando %d\n", animState);
 }
 
@@ -78,41 +121,43 @@ void animationupdate(personagens* self, bool* canupdt,  enum animStates* anst){
     float dt = GetFrameTime();
     for(int i = PLAYER1; i <= PLAYER2; i++){
         //if(i == PLAYER1) printf("%d\n", self[i].animations->cur);
-        self[i].animations[anst[i]].duration_left -= dt;
+        self[i].animations[self[i].animationSubState].duration_left -= dt;
 
-        if(self[i].animations[anst[i]].type == ONESHOT)
+        if(self[i].animations[self[i].animationSubState].type == ONESHOT)
             canupdt[i] = false;
+        //self[i].animationSubState
+        if(self[i].animations[self[i].animationSubState].duration_left <= 0.0){
+            self[i].animations[self[i].animationSubState].duration_left = self[i].animations[self[i].animationSubState].speed;
+            self[i].animations[self[i].animationSubState].cur += self[i].animations[self[i].animationSubState].step;
 
-        if(self[i].animations[anst[i]].duration_left <= 0.0){
-            self[i].animations[anst[i]].duration_left = self[i].animations[anst[i]].speed;
-            self[i].animations[anst[i]].cur += self[i].animations[anst[i]].step;
+            if(self[i].animations[self[i].animationSubState].cur > self[i].animations[self[i].animationSubState].last){
 
-            if(self[i].animations[anst[i]].cur > self[i].animations[anst[i]].last){
-
-                switch (self[i].animations[anst[i]].type)
+                switch (self[i].animations[self[i].animationSubState].type)
                 {
                 case REPEATING:
-                    self[i].animations[anst[i]].cur = self[i].animations[anst[i]].first;
+                    self[i].animations[self[i].animationSubState].cur = self[i].animations[self[i].animationSubState].first;
                     break;
                 case ONESHOT:
-                    self[i].animations[anst[i]].cur = self[i].animations[anst[i]].first;
+                    self[i].animations[self[i].animationSubState].cur = self[i].animations[self[i].animationSubState].first;
                     canupdt[i] = true;
-                    anst[i] = IDLE;
+                    self[i].animationSubState = IDLE;
+                    self[i].animationState = IDLE;
                     break;
                 default:
                     break;
                 }
                 
-            } else if(self[i].animations[anst[i]].cur < self[i].animations[anst[i]].first){
-                switch (self[i].animations[anst[i]].type)
+            } else if(self[i].animations[self[i].animationSubState].cur < self[i].animations[self[i].animationSubState].first){
+                switch (self[i].animations[self[i].animationSubState].type)
                 {
                 case REPEATING:
-                    self[i].animations[anst[i]].cur = self[i].animations[anst[i]].last;
+                    self[i].animations[self[i].animationSubState].cur = self[i].animations[self[i].animationSubState].last;
                     break;
                 case ONESHOT:
-                    self[i].animations[anst[i]].cur = self[i].animations[anst[i]].last;
+                    self[i].animations[self[i].animationSubState].cur = self[i].animations[self[i].animationSubState].last;
                     canupdt[i] = true;
-                    anst[i] = IDLE;
+                    self[i].animationSubState = IDLE;
+                    self[i].animationState = IDLE;
                     break;
                 default:
                     break;

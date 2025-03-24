@@ -18,6 +18,8 @@ int main(void)
     
     //Texture2D ota = LoadTexture("assets/personagens/ota.png"); // Carrega o sprite ca dammy rosa | usando apenas para testes
     personagens enemy;
+    enemy.animationState = IDLE;
+    enemy.animationSubState = IDLING;
     enemy.type=0;
     enemy.animations = malloc((ANIMSTATESFINAL) * sizeof(Animation)); // Seta o ponteiro animations de cammy para um array dinamico de Animation (struct que contem os dados de posição, largura, frames, etc de cada animação) | ANIMSTATESFINAL é o último item de um enum que contem todas as animações, logo é alocado memória o suficiente para todas as animações
     enemy.textures = malloc((ANIMSTATESFINAL) * sizeof(Texture2D));
@@ -27,12 +29,14 @@ int main(void)
 
 
     personagens cammy; // Cria uma personagem chamada cammy
+    cammy.animationState = IDLE;
+    cammy.animationSubState = IDLING;
     cammy.type = 1;
     cammy.animations = malloc((ANIMSTATESFINAL) * sizeof(Animation)); // Seta o ponteiro animations de cammy para um array dinamico de Animation (struct que contem os dados de posição, largura, frames, etc de cada animação) | ANIMSTATESFINAL é o último item de um enum que contem todas as animações, logo é alocado memória o suficiente para todas as animações
     cammy.textures = malloc((ANIMSTATESFINAL) * sizeof(Texture2D)); // Seta o ponteiro textures de cammy para um array dinâmico de Textures2D 
     handle_init_loads(&cammy); // Função handle_init_loads() recebe o endereço do personagem, e popula seus ponteiros animations e textures com dados pré definidos
 
-
+    cammy.retangulos = malloc (ANIMSTATESFINAL* 10 * sizeof(Rectangle));
 
 
     personagens entidades [] = {cammy, enemy};
@@ -40,10 +44,10 @@ int main(void)
     //===================================================================
     //===========================VARIÁVEIS INICIAIS DO PLAYER==================
     float speed = 100.0f; // Velocidade com que o player ira se mover
-    Vector2 pos = {.x = 100, .y=100}; // Vetor que contem a posição do player
+    Vector2 pos = {.x = 180, .y=220}; // Vetor que contem a posição do player
     Vector2 dir = {.x=0, .y=0}; // Vertor que contem a direção do player
 
-    Vector2 epos = {150,100};
+    Vector2 epos = {204,220};
     Vector2 edir = {0,0};
 
     Vector2 positions [] = {pos, epos};
@@ -68,18 +72,20 @@ int main(void)
     //========================================================================
     //==================COFIGURAÇÃO DA CAMERA=============================
     Camera2D camera; //Cira uma camera 2d
-    camera.target = (Vector2){ pos.x + 20.0f, pos.y + 20.0f }; // Seta o target da camera para a posição do player, com um deslocamento de 20.0 para centralizar melhot
+    camera.target = (Vector2){ pos.x + 20.0f, pos.y + 00.0f }; // Seta o target da camera para a posição do player, com um deslocamento de 20.0 para centralizar melhot
     camera.offset = (Vector2){ screenWidth/2.0f, screenHeight/2.0f };
     camera.rotation = 0.0f; // Seta rotação da camera pa 0
     camera.zoom = 3.0f; // Seta zoom para 3
 
-    Texture2D bg = LoadTexture("assets/personagens/bg.jpg");
+    Texture2D bg = LoadTexture("assets/personagens/bg.png");
 
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         float dt = GetFrameTime(); // deltaTime 
 
-        handleInput(directions, can_updates, animState); // Função que verifica se um input foi feito | Dependendo do input pode alterar a direção do player e/ou sua animação
+        handleInput(directions, can_updates, animState, entidades);
+
+        //handleInput(directions, can_updates, animState, ); // Função que verifica se um input foi feito | Dependendo do input pode alterar a direção do player e/ou sua animação
         //handleInput(&edir, can_enemy_update_animation, &enemyAnimState, enemy.type);
 
         //====================================UPDATES=============================================
@@ -88,19 +94,19 @@ int main(void)
 
         //printf("%d\n", animState[PLAYER1]);
         
-        pos.x += directions[PLAYER1].x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
+        pos.x += entidades[PLAYER1].direction.x  * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
         pos.y += directions[PLAYER1].y * speed * dt; // Altera a posição em x de acordo com a direção do player 
 
-        epos.x += directions[PLAYER2].x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
+        epos.x += entidades[PLAYER2].direction.x * speed * dt; // Altera a posição em x de acordo com a direção do player | dt faz com que o movimento seja constante, não importando o fps
         epos.y += directions[PLAYER2].y * speed * dt; // Altera a posição em x de acordo com a direção do player
 
-        positions[PLAYER1] = pos;
-        positions[PLAYER2] = epos;
+        entidades[PLAYER1].position = pos;
+        entidades[PLAYER2].position = epos;
 
-        camera.target = (Vector2){ pos.x + 20, pos.y - 40 }; // Altera a posição da camera de acordo com a posição do player
+        camera.target = (Vector2){ pos.x + 20, pos.y - 80 }; // Altera a posição da camera de acordo com a posição do player
 
-        directions[PLAYER1] = (Vector2){0,0};
-        directions[PLAYER2] = directions[PLAYER1];
+        entidades[PLAYER1].direction = (Vector2){0,0};
+        entidades[PLAYER2].direction =  entidades[PLAYER1].direction;
 
         dir = (Vector2){.x=0, .y=0}; // Reseta a direção para (0,0) | player parado
         edir = dir;
@@ -138,11 +144,12 @@ int main(void)
     free(cammy.textures); // Libera o espaço alocado para as texturas 
     free(enemy.animations);
     free(enemy.textures);
+    free(cammy.retangulos);
 
     CloseWindow(); // Fecha a janela
 
-    int a;
-    scanf("%d", &a);
+    //int a;
+    //scanf("%d", &a);
 
     return 0;
 }

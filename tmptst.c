@@ -3,17 +3,9 @@
 
 int main(){
 
-    int max = 5, a;
-
-    int* pointer;
-
-    pointer = malloc((max-1) * sizeof(int));
-
-    for(a = 0; a < max; a++){
-        pointer[a] = a;
-    }
-
-    free(pointer);
+    enum players {PLAYER1, PLAYER2};
+    
+    printf("%d\n", PLAYER2);
 
     return 0;
 } 
