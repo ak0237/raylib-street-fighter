@@ -16,38 +16,41 @@ void attack(personagens* personagem, int state, int substate){
     chstates(personagem, state, substate);
 }
 
+void onJumping(personagens* personagem){
+    //printf("%d\n", personagem->animations->cur);
+    personagem->direction.y = 1;
+   
+}
+
+void jump(personagens* personagem, int state, int substate){
+    chstates(personagem, JUMP, JUMPING);
+    personagem->velocity.y += -450;
+    //else personagem->direction.y = -1; 
+}
+
 void inputIdle(personagens* personagem, int qual){
     switch (qual)
     {
     case PLAYER1:
-        if(IsKeyDown(KEY_D)){
-            move(&personagem[PLAYER1], 1, WALK, WALKING);
-        }else if(IsKeyDown(KEY_A)){
-            move(&personagem[PLAYER1], -1, WALK, WALKINGB);
-        }else if(IsKeyDown(KEY_T)){
-            attack(&personagem[PLAYER1], ATTACK, PUNCHING1);
-        }else if(IsKeyDown(KEY_Y)){
-            attack(&personagem[PLAYER1], ATTACK, PUNCHING2);
-        }else if(IsKeyDown(KEY_U)){
-            attack(&personagem[PLAYER1], ATTACK, PUNCHING3);
-        }else{
-            chstates(&personagem[PLAYER1], IDLE, IDLE);
-        }
+
+        if(IsKeyDown(KEY_D)) move(&personagem[PLAYER1], 1, WALK, WALKING);
+        else if(IsKeyDown(KEY_A)) move(&personagem[PLAYER1], -1, WALK, WALKINGB);
+        else if(IsKeyDown(KEY_T))attack(&personagem[PLAYER1], ATTACK, PUNCHING1);
+        else if(IsKeyDown(KEY_W)) jump(&personagem[PLAYER1], JUMP, JUMPING);
+        else if(IsKeyDown(KEY_Y))attack(&personagem[PLAYER1], ATTACK, PUNCHING2);
+        else if(IsKeyDown(KEY_U))attack(&personagem[PLAYER1], ATTACK, PUNCHING3);
+        else chstates(&personagem[PLAYER1], IDLE, IDLE);
         break;
     case PLAYER2:
-        if(IsKeyDown(KEY_RIGHT)){
-            move(&personagem[PLAYER2], 1, WALK, WALKING);
-        }else if(IsKeyDown(KEY_LEFT)){
-            move(&personagem[PLAYER2], -1, WALK, WALKINGB);
-        }else if(IsKeyDown(KEY_KP_1)){
-            attack(&personagem[PLAYER2], ATTACK, PUNCHING1);
-        }else if(IsKeyDown(KEY_KP_2)){
-            attack(&personagem[PLAYER2], ATTACK, PUNCHING2);
-        }else if(IsKeyDown(KEY_KP_3)){
-            attack(&personagem[PLAYER2], ATTACK, PUNCHING3);
-        }else{
-            chstates(&personagem[PLAYER2], IDLE, IDLE);
-        }
+
+        if(IsKeyDown(KEY_RIGHT)) move(&personagem[PLAYER2], 1, WALK, WALKING);
+        else if(IsKeyDown(KEY_LEFT)) move(&personagem[PLAYER2], -1, WALK, WALKINGB);
+        else if(IsKeyDown(KEY_UP)) jump(&personagem[PLAYER2], JUMP, JUMPING);
+        else if(IsKeyDown(KEY_KP_1)) attack(&personagem[PLAYER2], ATTACK, PUNCHING1);
+        else if(IsKeyDown(KEY_KP_2)) attack(&personagem[PLAYER2], ATTACK, PUNCHING2);
+        else if(IsKeyDown(KEY_KP_3)) attack(&personagem[PLAYER2], ATTACK, PUNCHING3);
+        else chstates(&personagem[PLAYER2], IDLE, IDLE);
+        
         break;
     default:
         break;
@@ -121,8 +124,36 @@ void inputAttack(personagens* personagem, int qual){
     }
 }
 
+void inputJump(personagens* personagem, int qual){
+    switch (qual)
+    {
+    case PLAYER1:
+        if(IsKeyDown(KEY_T) && personagem[PLAYER1].animationSubState != PUNCHING1) attack(&personagem[PLAYER1], ATTACK, PUNCHING1);
 
-void handleInput(Vector2* dir, bool* can_update_animation, enum animStates* animState, personagens* personagem){
+        else if(IsKeyDown(KEY_Y) && personagem[PLAYER1].animationSubState != PUNCHING2) attack(&personagem[PLAYER1], ATTACK, PUNCHING2);
+
+        else if(IsKeyDown(KEY_U) && personagem[PLAYER1].animationSubState != PUNCHING2) attack(&personagem[PLAYER1], ATTACK, PUNCHING3);
+
+        //else chstates(&personagem[PLAYER1], IDLE, IDLE);
+        
+        break;
+
+    case PLAYER2:
+        if(IsKeyDown(KEY_KP_1) && personagem[PLAYER2].animationSubState != PUNCHING1) attack(&personagem[PLAYER2], ATTACK, PUNCHING1);
+
+        else if(IsKeyDown(KEY_KP_2) && personagem[PLAYER2].animationSubState != PUNCHING2) attack(&personagem[PLAYER2], ATTACK, PUNCHING2);
+        
+        else if(IsKeyDown(KEY_KP_3) && personagem[PLAYER2].animationSubState != PUNCHING3) attack(&personagem[PLAYER2], ATTACK, PUNCHING3);
+        
+        //else chstates(&personagem[PLAYER2], IDLE, IDLE);
+        
+        break;
+    default:
+        break;
+    }
+}
+
+void handleInput( bool* can_update_animation, enum animStates* animState, personagens* personagem){
 
     for(int i = PLAYER1; i <= PLAYER2; i++){
         switch (personagem[i].animationState)
@@ -134,6 +165,7 @@ void handleInput(Vector2* dir, bool* can_update_animation, enum animStates* anim
             inputWalk(personagem, i);
             break;
         case JUMP:
+            onJumping(&personagem[i]);
             break;
         case CROUNCH:
             break;

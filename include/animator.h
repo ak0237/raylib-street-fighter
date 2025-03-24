@@ -9,7 +9,7 @@ enum animationType {REPEATING, ONESHOT};
 enum players {PLAYER1, PLAYER2};
 
 enum animStates {IDLE, WALK, JUMP, CROUNCH, ATTACK};
-enum animSubStates {IDLING, WALKING, WALKINGB, PUNCHING1, PUNCHING2, PUNCHING3, ANIMSTATESFINAL};
+enum animSubStates {IDLING, WALKING, WALKINGB, PUNCHING1, PUNCHING2, PUNCHING3, JUMPING, ANIMSTATESFINAL};
 enum nFrmsAnim {nfIDLE = 5, nfWALKING = 6, nfJUMPING = 6};
 
 typedef struct Animation
@@ -51,6 +51,12 @@ typedef struct personagens
     int layer;
     Vector2 position;
     Vector2 direction;
+    Vector2 velocity;
+    Rectangle pushbox;
+    Rectangle hitbox;
+    Rectangle hutbox;
+    Rectangle throwbox;
+    int facing;
 } personagens;
 
 
@@ -60,10 +66,10 @@ void handle_init_loads(personagens* personagem);
 
 void animationupdate(personagens* self, bool* canupdt,  enum animStates* anst);
 void animationupdateatk(Animation* self, bool* canupdt, enum animStates* anst, Vector2* pos);
-Rectangle animation_frame(Animation* self, int type);
+Rectangle animation_frame(Animation* self, int facing);
 //Rectangle animation_frame_cammy_jump(Animation* self, int frames_p_row, int width, int height);
 
-void drawAnychar(personagens* self, enum animStates* animState, Vector2* pos, int type);
+void drawAnychar(personagens* self, enum animStates* animState);
 
 
 #endif

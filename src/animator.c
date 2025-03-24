@@ -111,9 +111,9 @@ void nhandle_init_loads(personagens* personagem, enum animStates* animState){
     
 }
 
-void drawAnychar(personagens* self, enum animStates* animState, Vector2* pos, int type){
+void drawAnychar(personagens* self, enum animStates* animState){
     
-    DrawTexturePro(self->textures[self->animationSubState], animation_frame(&self->animations[self->animationSubState], type), (Rectangle){self->position.x, self->position.y, self->animations[self->animationSubState].frame_width, self->animations[self->animationSubState].frame_height}, (Vector2){self->animations[self->animationSubState].frame_width / 2, self->animations[self->animationSubState].frame_height}, 0.0f, WHITE);
+    DrawTexturePro(self->textures[self->animationSubState], animation_frame(&self->animations[self->animationSubState], self->facing), (Rectangle){self->position.x, self->position.y, self->animations[self->animationSubState].frame_width, self->animations[self->animationSubState].frame_height}, (Vector2){self->animations[self->animationSubState].frame_width / 2, self->animations[self->animationSubState].frame_height}, 0.0f, WHITE);
     //printf("desenhando %d\n", animState);
 }
 
@@ -168,13 +168,9 @@ void animationupdate(personagens* self, bool* canupdt,  enum animStates* anst){
     }
 }
 
-Rectangle animation_frame(Animation* self, int type){
+Rectangle animation_frame(Animation* self, int facing){
     int nWid = self->frame_width;
-    if(type == PLAYER2){
-        nWid = nWid * (-1);
-        //printf("Pointer recebido: %p\n", (void*)self);
-        //printf("cur recebido: %d\n", self->cur);
-    }
+    nWid *= facing; 
     int x = (self->cur%(self->last + 1)) *  self->frame_width;
     int y = (self->cur/(self->last + 1)) * self->frame_height;
 
