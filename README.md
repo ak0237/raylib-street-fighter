@@ -27,7 +27,7 @@ Bem-vindo ao repositório do meu clone de Street Fighter! O projeto está sendo 
 
 ## 🐞 Bugs conhecidos
 - Existe um bug na animação de **idle**, onde **os sprites têm alturas diferentes**. Por causa disso, em alguns quadros da animação, uma pequena parte da **textura de baixo aparece** indevidamente.  
-  ✏️ **Estou ciente desse problema e já planejo corrigir** nas próximas atualizações, ajustando o alinhamento dos sprites.
+  ✏️ **Estou ciente desse problema e já planejo corrigir** nas próximas atualizações, ajustando o alinhamento dos sprites. [CORRIGIDO]
 
 ---
 

@@ -111,6 +111,9 @@ int main(void)
         dir = (Vector2){.x=0, .y=0}; // Reseta a direção para (0,0) | player parado
         edir = dir;
 
+        if(IsKeyDown(KEY_KP_7) && IsKeyDown(KEY_KP_8)) printf("2\n");
+        else printf("0 o 1\n");
+
         //printf("%d\n", entidades[PLAYER1].animations->cur);
        //=============================RENDERIZAÇÃO===================
         BeginDrawing(); // Inicia o ambiente de Drawing
