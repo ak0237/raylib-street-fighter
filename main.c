@@ -96,6 +96,7 @@ int main(void)
         //handleInput(&edir, can_enemy_update_animation, &enemyAnimState, enemy.type);
 
         //====================================UPDATES=============================================
+        //printf("%d\n", entidades[PLAYER1].animationSubState);
         animationupdate(entidades, can_updates, animState);
         //animationupdate(&cammy.animations[cammyanimState], &can_update_animation, &animState); // Seta onde os dados da animação de acordo com o animState
 
@@ -115,15 +116,16 @@ int main(void)
         entidades[PLAYER1].facing  = (entidades[PLAYER2].position.x - entidades[PLAYER1].position.x > 0) ? 1 : -1;
 
         //entidades[PLAYER1].position.x - entidades[PLAYER2].position.x > 0 ? entidades[PLAYER2].facing = 1 : entidades[PLAYER2].facing = -1;
-
+       // printf("%f %d\n", entidades[PLAYER1].direction.x, entidades[PLAYER1].facing);
+        //if(IsKeyDown(KEY_W) && entidades[PLAYER1].direction.x == entidades[PLAYER1].facing) printf("foi\n"); 
         for(int i = PLAYER1; i <= PLAYER2; i++){
-            entidades[i].position.x += entidades[i].direction.x  * speed * dt;
+            entidades[i].position.x += entidades[i].direction.x  * entidades[i].velocity.x * dt;
             if(CheckCollisionRecs(entidades[PLAYER1].pushbox, entidades[PLAYER2].pushbox) && entidades[i].direction.x == entidades[i].facing){ 
                 //entidades[i].direction.x = 0;
                 switch (i)
                 {
                 case PLAYER1:
-                    entidades[PLAYER2].position.x += entidades[PLAYER1].direction.x  * speed * dt;
+                    entidades[PLAYER2].position.x += entidades[PLAYER1].direction.x  * entidades[PLAYER1].velocity.x * dt;
                     break;
                 case PLAYER2:
                     entidades[PLAYER1].position.x += entidades[PLAYER2].direction.x  * speed * dt;
@@ -139,7 +141,7 @@ int main(void)
                 entidades[i].velocity.y = 0;
                 entidades[i].grounded = true;\
             }
-            entidades[i].direction.x = 0;
+            if(entidades[i].grounded) entidades[i].direction.x = 0;
 
             entidades[i].pushbox = (Rectangle){.x = entidades[i].position.x-20, .y=entidades[i].position.y-90, .width = 25, .height = 90};
         }
@@ -148,7 +150,6 @@ int main(void)
         
         //dir = (Vector2){.x=0}; // Reseta a direção para (0,0) | player parado
         //edir = dir;
-        
         
 
       

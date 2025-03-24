@@ -131,6 +131,7 @@ void animationupdate(personagens* self, bool* canupdt,  enum animStates* anst){
             self[i].animations[self[i].animationSubState].cur += self[i].animations[self[i].animationSubState].step;
 
             if(self[i].animations[self[i].animationSubState].cur > self[i].animations[self[i].animationSubState].last){
+                self[i].velocity.x = (self[i].velocity.x != 100.0f) ? 100.0f : 100.0f;
 
                 switch (self[i].animations[self[i].animationSubState].type)
                 {
