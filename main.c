@@ -182,7 +182,8 @@ int main(void)
         drawAnychar(&entidades[firstDraw], &animState[firstDraw]);
         drawAnychar(&entidades[secondDraw], &animState[secondDraw]); // Renderiza a animação do player
 
-        //DrawRectangleLinesEx(entidades[PLAYER1].pushbox, 2.0f, RED);
+        DrawRectangleLinesEx(entidades[PLAYER1].pushbox, 2.0f, RED);
+        DrawRectangleLinesEx(entidades[PLAYER2].pushbox, 2.0f, BLUE);
         //printf("x = %f | y = %f | w = %f | h = %f \n", entidades[PLAYER1].pushbox.x, entidades[PLAYER1].pushbox.y, entidades[PLAYER1].pushbox.width, entidades[PLAYER1].pushbox.height);
 
         //DrawRectangleRec(entidades[PLAYER1].pushbox, GREEN);

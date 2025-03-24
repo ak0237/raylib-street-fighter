@@ -50,11 +50,13 @@ void inputIdle(personagens* personagem, int qual){
     {
     case PLAYER1:
 
+        if(IsKeyDown(KEY_D) && IsKeyDown(KEY_W) && personagem[PLAYER1].facing == 1) jumpf(&personagem[PLAYER1], JUMP, JUMPINGF);
+        else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W) && personagem[PLAYER1].facing == -1) jumpf(&personagem[PLAYER1], JUMP, JUMPINGF);
+        
         if(IsKeyDown(KEY_D)) move(&personagem[PLAYER1], 1, WALK, WALKING);
         else if(IsKeyDown(KEY_A)) move(&personagem[PLAYER1], -1, WALK, WALKINGB);
 
         else if(IsKeyDown(KEY_W)) jump(&personagem[PLAYER1], JUMP, JUMPING);
-        else if(IsKeyDown(KEY_Q)) jumpf(&personagem[PLAYER1], JUMP, JUMPINGF);
         
         else if(IsKeyDown(KEY_T))attack(&personagem[PLAYER1], ATTACK, PUNCHING1);
         else if(IsKeyDown(KEY_Y))attack(&personagem[PLAYER1], ATTACK, PUNCHING2);
@@ -63,13 +65,17 @@ void inputIdle(personagens* personagem, int qual){
         else chstates(&personagem[PLAYER1], IDLE, IDLE);
         break;
     case PLAYER2:
-
-        if(IsKeyDown(KEY_RIGHT)) move(&personagem[PLAYER2], 1, WALK, WALKING);
+        if(IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP) && personagem[PLAYER2].facing == 1) jumpf(&personagem[PLAYER2], JUMP, JUMPINGF);
+        else if(IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_UP) && personagem[PLAYER2].facing == -1) jumpf(&personagem[PLAYER2], JUMP, JUMPINGF);
+        
+        else if(IsKeyDown(KEY_RIGHT)) move(&personagem[PLAYER2], 1, WALK, WALKING);
         else if(IsKeyDown(KEY_LEFT)) move(&personagem[PLAYER2], -1, WALK, WALKINGB);
         else if(IsKeyDown(KEY_UP)) jump(&personagem[PLAYER2], JUMP, JUMPING);
+        
         else if(IsKeyDown(KEY_KP_1)) attack(&personagem[PLAYER2], ATTACK, PUNCHING1);
         else if(IsKeyDown(KEY_KP_2)) attack(&personagem[PLAYER2], ATTACK, PUNCHING2);
         else if(IsKeyDown(KEY_KP_3)) attack(&personagem[PLAYER2], ATTACK, PUNCHING3);
+        
         else chstates(&personagem[PLAYER2], IDLE, IDLE);
         
         break;
@@ -105,19 +111,24 @@ void inputWalk(personagens* personagem, int qual){
         
         break;
     case PLAYER2:
-        if(IsKeyDown(KEY_RIGHT)){
+        if(IsKeyDown(KEY_RIGHT) && IsKeyDown(KEY_UP) && personagem[PLAYER2].facing == 1) jumpf(&personagem[PLAYER2], JUMP, JUMPINGF);
+        else if(IsKeyDown(KEY_LEFT) && IsKeyDown(KEY_UP) && personagem[PLAYER2].facing == -1) jumpf(&personagem[PLAYER2], JUMP, JUMPINGF);
+        
+        else if(IsKeyDown(KEY_RIGHT))
             move(&personagem[PLAYER2], 1, WALK, WALKING);
-        }else if(IsKeyDown(KEY_LEFT)){
+        else if(IsKeyDown(KEY_LEFT))
             move(&personagem[PLAYER2], -1, WALK, WALKINGB);
-        }else if(IsKeyDown(KEY_KP_1)){
+
+        else if(IsKeyDown(KEY_KP_1))
             attack(&personagem[PLAYER2], ATTACK, PUNCHING1);
-        }else if(IsKeyDown(KEY_KP_2)){
+        else if(IsKeyDown(KEY_KP_2))
             attack(&personagem[PLAYER2], ATTACK, PUNCHING2);
-        }else if(IsKeyDown(KEY_KP_3)){
+        else if(IsKeyDown(KEY_KP_3))
             attack(&personagem[PLAYER2], ATTACK, PUNCHING3);
-        }else{
+
+        else
             chstates(&personagem[PLAYER2], IDLE, IDLE);
-        }
+        
         break;
     default:
         break;
