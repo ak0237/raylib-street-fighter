@@ -4,12 +4,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-enum animationType {REPEATING, ONESHOT};
+enum animationType {REPEATING, ONESHOT, HOLDING};
 
 enum players {PLAYER1, PLAYER2};
 
 enum animStates {IDLE, WALK, JUMP, CROUNCH, ATTACK};
-enum animSubStates {IDLING, WALKING, WALKINGB, PUNCHING1, PUNCHING2, PUNCHING3, JUMPING, JUMPINGF, ANIMSTATESFINAL};
+enum animSubStates {IDLING, WALKING, WALKINGB, PUNCHING1, PUNCHING2, PUNCHING3, JUMPING, JUMPINGF, CROUNCHING, ANIMSTATESFINAL};
 enum nFrmsAnim {nfIDLE = 5, nfWALKING = 6, nfJUMPING = 6};
 
 typedef struct Animation

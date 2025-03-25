@@ -23,7 +23,10 @@ void onJumping(personagens* personagem){
     personagem->velocity.x = 100;
     //printf("fac %d\n", personagem->facing);
     if(personagem->grounded) personagem->direction.x = personagem->facing;
-   
+}
+
+void onCrounching(personagens* personagem){
+    personagem->pushbox.height /= 2;
 }
 
 void jump(personagens* personagem, int state, int substate){
@@ -44,6 +47,10 @@ void jumpf(personagens* personagem, int state, int substate){
     }
 }
 
+void crounch(personagens* personagem, int state, int substate){
+    chstates(personagem, state, substate);
+}
+
 void inputIdle(personagens* personagem, int qual){
     
     switch (qual)
@@ -58,6 +65,8 @@ void inputIdle(personagens* personagem, int qual){
 
         else if(IsKeyDown(KEY_W)) jump(&personagem[PLAYER1], JUMP, JUMPING);
         
+        else if (IsKeyDown(KEY_S)) crounch(&personagem[PLAYER1], CROUNCH, CROUNCHING);
+        
         else if(IsKeyDown(KEY_T))attack(&personagem[PLAYER1], ATTACK, PUNCHING1);
         else if(IsKeyDown(KEY_Y))attack(&personagem[PLAYER1], ATTACK, PUNCHING2);
         else if(IsKeyDown(KEY_U))attack(&personagem[PLAYER1], ATTACK, PUNCHING3);
@@ -70,7 +79,10 @@ void inputIdle(personagens* personagem, int qual){
         
         else if(IsKeyDown(KEY_RIGHT)) move(&personagem[PLAYER2], 1, WALK, WALKING);
         else if(IsKeyDown(KEY_LEFT)) move(&personagem[PLAYER2], -1, WALK, WALKINGB);
+
         else if(IsKeyDown(KEY_UP)) jump(&personagem[PLAYER2], JUMP, JUMPING);
+
+        else if (IsKeyDown(KEY_DOWN)) crounch(&personagem[PLAYER2], CROUNCH, CROUNCHING);
         
         else if(IsKeyDown(KEY_KP_1)) attack(&personagem[PLAYER2], ATTACK, PUNCHING1);
         else if(IsKeyDown(KEY_KP_2)) attack(&personagem[PLAYER2], ATTACK, PUNCHING2);
@@ -85,7 +97,7 @@ void inputIdle(personagens* personagem, int qual){
 }
 
 void inputWalk(personagens* personagem, int qual){
-    printf("%d %d\n", (int)personagem[PLAYER1].direction.x, personagem[PLAYER1].facing);
+    //printf("%d %d\n", (int)personagem[PLAYER1].direction.x, personagem[PLAYER1].facing);
     if(IsKeyDown(KEY_W) && (int)personagem[PLAYER1].direction.x==personagem[PLAYER1].facing) printf("foi\n");
     //else printf("na\n");
     switch (qual)
@@ -98,6 +110,8 @@ void inputWalk(personagens* personagem, int qual){
             move(&personagem[PLAYER1], 1, WALK, WALKING);
         else if(IsKeyDown(KEY_A))
             move(&personagem[PLAYER1], -1, WALK, WALKINGB);
+
+        else if (IsKeyDown(KEY_S)) crounch(&personagem[PLAYER1], CROUNCH, CROUNCHING);
 
 
         else if(IsKeyDown(KEY_T))
@@ -193,6 +207,20 @@ void inputJump(personagens* personagem, int qual){
     }
 }
 
+void inputCrounch(personagens* personagem, int qual){
+    switch (qual)
+    {
+    case PLAYER1:
+        if(IsKeyUp(KEY_S)) chstates(&personagem[PLAYER1], IDLE, IDLING);
+        break;
+    case PLAYER2:
+        if(IsKeyUp(KEY_DOWN)) chstates(&personagem[PLAYER2], IDLE, IDLING);
+        break;
+    default:
+        break;
+    }
+}
+
 void handleInput( bool* can_update_animation, enum animStates* animState, personagens* personagem){
 
     for(int i = PLAYER1; i <= PLAYER2; i++){
@@ -208,9 +236,12 @@ void handleInput( bool* can_update_animation, enum animStates* animState, person
             break;
         case JUMP:
             onJumping(&personagem[i]);
+            inputJump(personagem, i);
             personagem[i].layer = 2;
             break;
         case CROUNCH:
+            onCrounching(&personagem[i]);
+            inputCrounch(personagem, i);
             break;
         case ATTACK:
             inputAttack(personagem, i);
