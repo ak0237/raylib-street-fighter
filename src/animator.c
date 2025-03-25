@@ -11,7 +11,7 @@ enum animationType stringParaEnum(const char *str) {
     if (strcmp(str, "REPEATING") == 0) return REPEATING;
     if (strcmp(str, "ONESHOT") == 0) return ONESHOT;
     if (strcmp(str, "HOLDING") == 0) return HOLDING;
-    
+
     return REPEATING;
 }
 
@@ -121,7 +121,7 @@ void drawAnychar(personagens* self, enum animStates* animState){
 
 void animationupdate(personagens* self, bool* canupdt,  enum animStates* anst){
     float dt = GetFrameTime();
-    printf("%d\n", self[PLAYER1].animations[self[PLAYER1].animationSubState].type);
+    //printf("%d\n", self[PLAYER1].animations[self[PLAYER1].animationSubState].type);
     for(int i = PLAYER1; i <= PLAYER2; i++){
         //if(i == PLAYER1) printf("%d\n", self[i].animations->cur);
         self[i].animations[self[i].animationSubState].duration_left -= dt;

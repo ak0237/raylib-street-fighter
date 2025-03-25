@@ -14,6 +14,7 @@ void move(personagens* personagem, int direction, int state, int substate){
 
 void attack(personagens* personagem, int state, int substate){
     chstates(personagem, state, substate);
+    personagem->direction.x = personagem->facing;
     //personagem->layer=2;
 }
 
@@ -50,6 +51,8 @@ void jumpf(personagens* personagem, int state, int substate){
 void crounch(personagens* personagem, int state, int substate){
     chstates(personagem, state, substate);
 }
+
+
 
 void inputIdle(personagens* personagem, int qual){
     
@@ -103,8 +106,13 @@ void inputWalk(personagens* personagem, int qual){
     switch (qual)
     {
     case PLAYER1:
+        printf("%d\n", personagem[PLAYER1].facing);
         if(IsKeyDown(KEY_D) && IsKeyDown(KEY_W) && personagem[PLAYER1].facing == 1) jumpf(&personagem[PLAYER1], JUMP, JUMPINGF);
         else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W) && personagem[PLAYER1].facing == -1) jumpf(&personagem[PLAYER1], JUMP, JUMPINGF);
+        else if(IsKeyDown(KEY_D) && IsKeyDown(KEY_T) && personagem[PLAYER1].facing == 1) attack(&personagem[PLAYER1], ATTACK, PUNCHING1F);
+        else if(IsKeyDown(KEY_A) && IsKeyDown(KEY_W) && personagem[PLAYER1].facing == -1) attack(&personagem[PLAYER1], ATTACK, PUNCHING1F);
+
+        else if(IsKeyDown(KEY_M)) attack(&personagem[PLAYER1], ATTACK, PUNCHING1F);
         
         else if(IsKeyDown(KEY_D))
             move(&personagem[PLAYER1], 1, WALK, WALKING);
@@ -153,7 +161,7 @@ void inputAttack(personagens* personagem, int qual){
     switch (qual)
     {
     case PLAYER1:
-        if(IsKeyDown(KEY_T) && personagem[PLAYER1].animationSubState != PUNCHING1) attack(&personagem[PLAYER1], ATTACK, PUNCHING1);
+        if(IsKeyDown(KEY_T) && personagem[PLAYER1].animationSubState != PUNCHING1 && !(IsKeyDown(KEY_A) || IsKeyDown(KEY_D))) attack(&personagem[PLAYER1], ATTACK, PUNCHING1);
 
         else if(IsKeyDown(KEY_Y) && personagem[PLAYER1].animationSubState != PUNCHING2) attack(&personagem[PLAYER1], ATTACK, PUNCHING2);
 
