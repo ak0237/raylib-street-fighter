@@ -8,8 +8,9 @@
 int main(void)
 {
    // Configurações iniciais
-    const int screenWidth = 960; // Largura da tela
-    const int screenHeight = 561; // Altura da Tela
+    const int screenWidth = 1280; // Largura da tela
+    const int screenHeight = 720; // Altura da Tela    
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window"); // Cria a janela onde o game será rodado
     SetTargetFPS(60);   // Seta fps
 
@@ -180,8 +181,8 @@ int main(void)
         drawAnychar(&entidades[firstDraw], &animState[firstDraw]);
         drawAnychar(&entidades[secondDraw], &animState[secondDraw]); // Renderiza a animação do player
 
-        DrawRectangleLinesEx(entidades[PLAYER1].pushbox, 2.0f, cor);
-        DrawRectangleLinesEx(entidades[PLAYER2].pushbox, 2.0f, BLUE);
+        //DrawRectangleLinesEx(entidades[PLAYER1].pushbox, 2.0f, cor);
+        //DrawRectangleLinesEx(entidades[PLAYER2].pushbox, 2.0f, BLUE);
         //printf("x = %f | y = %f | w = %f | h = %f \n", entidades[PLAYER1].pushbox.x, entidades[PLAYER1].pushbox.y, entidades[PLAYER1].pushbox.width, entidades[PLAYER1].pushbox.height);
 
         //DrawRectangleRec(entidades[PLAYER1].pushbox, GREEN);
